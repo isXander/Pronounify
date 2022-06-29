@@ -1,6 +1,10 @@
 plugins {
     java
 
+    val kotlinVersion: String by System.getProperties()
+    kotlin("jvm") version kotlinVersion
+    kotlin("plugin.serialization") version kotlinVersion
+
     id("fabric-loom") version "0.12.+"
     id("io.github.juuxel.loom-quiltflower") version "1.7.+"
 
@@ -12,21 +16,42 @@ plugins {
 }
 
 group = "dev.isxander"
-version = "1.0.0"
+version = "2.0.0"
 
 repositories {
     mavenCentral()
+    maven("https://maven.isxander.dev/releases")
+    maven("https://maven.shedaniel.me")
+    maven("https://maven.terraformersmc.com/releases")
 }
 
 val minecraftVersion: String by project
 
 dependencies {
     val fabricLoaderVersion: String by project
+    val kotlinVersion: String by System.getProperties()
 
     minecraft("com.mojang:minecraft:$minecraftVersion")
     mappings("net.fabricmc:yarn:$minecraftVersion+build.+:v2")
 
     modImplementation("net.fabricmc:fabric-loader:$fabricLoaderVersion")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:0.56.3+1.19") {
+        exclude(module = "fabric-renderer-indigo")
+    }
+    modImplementation("net.fabricmc:fabric-language-kotlin:1.8.1+kotlin.$kotlinVersion")
+
+    include(implementation("dev.isxander.settxi:settxi-core:2.5.0")!!)
+    include(implementation("dev.isxander.settxi:settxi-kotlinx-serialization:2.5.0")!!)
+    include(modImplementation("dev.isxander.settxi:settxi-gui-cloth-config:2.5.0:fabric-1.19") {
+        exclude(group = "me.shedaniel.cloth")
+    })
+
+    modImplementation("me.shedaniel.cloth:cloth-config-fabric:7.+")
+    modImplementation("com.terraformersmc:modmenu:4.0.0")
+}
+
+loom {
+    clientOnlyMinecraftJar()
 }
 
 tasks {
@@ -80,6 +105,12 @@ if (modrinthId.isNotEmpty()) {
         loaders.set(listOf("fabric", "quilt"))
         changelog.set(changelogText)
         syncBodyFrom.set(file("README.md").readText())
+
+        dependencies {
+            required.project("fabric-language-kotlin")
+            required.project("cloth-config")
+            optional.project("modmenu")
+        }
     }
 }
 
@@ -100,6 +131,12 @@ if (hasProperty("curseforge.token") && curseforgeId.isNotEmpty()) {
 
             changelog = changelogText
             changelogType = "markdown"
+
+            relations(closureOf<me.hypherionmc.cursegradle.CurseRelation> {
+                requiredDependency("fabric-language-kotlin")
+                requiredDependency("cloth-config")
+                optionalDependency("modmenu")
+            })
         })
 
         options(closureOf<me.hypherionmc.cursegradle.Options> {

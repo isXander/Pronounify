@@ -15,14 +15,24 @@
   "license": "LGPL-3.0-or-later",
   "environment": "client",
   "entrypoints": {
-
+    "modmenu": [
+      {
+        "value": "dev.isxander.pronounify.integrations.ModMenuIntegration",
+        "adapter": "kotlin"
+      }
+    ]
   },
   "mixins": [
-    "fabric-mod-template.mixins.json"
+    "pronounify.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.14.0",
     "minecraft": "1.19.x",
-    "java": ">=17"
+    "java": ">=17",
+    "fabric-language-kotlin": ">=1.8.0+kotlin.1.7.0",
+    "settxi-gui-cloth-config": "*"
+  },
+  "suggests": {
+    "modmenu": "*"
   }
 }
