@@ -39,25 +39,28 @@ object PronounManager {
         inProgressFetching += uuid
 
         runAsync {
-            val httpClient = HttpClient.newHttpClient()
-            val url = URI.create("https://pronoundb.org/api/v1/lookup?platform=minecraft&id=$uuid")
-            val request = HttpRequest.newBuilder(url).build()
-            val response = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
+            try {
+                val httpClient = HttpClient.newHttpClient()
+                val url = URI.create("https://pronoundb.org/api/v1/lookup?platform=minecraft&id=$uuid")
+                val request = HttpRequest.newBuilder(url).build()
+                val response = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
 
-            val pronouns = Json.decodeFromString<SingleLookupResponse>(response.body()).toEnum()!!
-            pronounsCache.put(uuid, pronouns)
+                val pronouns = Json.decodeFromString<SingleLookupResponse>(response.body()).toEnum()!!
+                pronounsCache.put(uuid, pronouns)
 
-            inProgressFetching -= uuid
-
-            pronounEvents[uuid]?.forEach {
-                it(pronouns)
+                pronounEvents[uuid]?.forEach {
+                    it(pronouns)
+                }
+                pronounEvents.remove(uuid)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                inProgressFetching -= uuid
             }
-            pronounEvents.remove(uuid)
         }
     }
 
     fun bulkCachePronouns(uuids: MutableCollection<UUID>) {
-        println(uuids)
         val filtered = uuids.filterNot { isCurrentlyFetching(it) || isPronounCached(it) }
         val chunked = filtered.chunked(50)
 
@@ -68,19 +71,22 @@ object PronounManager {
             coroutineScope {
                 chunked.map {
                     async {
-                        println(it)
-                        val url = URI.create("https://pronoundb.org/api/v1/lookup-bulk?platform=minecraft&ids=${it.joinToString(",")}")
-                        val request = HttpRequest.newBuilder(url).build()
-                        val response = withContext(Dispatchers.IO) {
-                            httpClient.send(request, HttpResponse.BodyHandlers.ofString())
+                        try {
+                            val url = URI.create("https://pronoundb.org/api/v1/lookup-bulk?platform=minecraft&ids=${it.joinToString(",")}")
+                            val request = HttpRequest.newBuilder(url).build()
+                            val response = withContext(Dispatchers.IO) {
+                                httpClient.send(request, HttpResponse.BodyHandlers.ofString())
+                            }
+
+                            val pronouns = Json.decodeFromString<Map<String, String>>(response.body())
+                                .mapKeys { (k, _) -> UUID.fromString(k) }
+                                .mapValues { (_, v) -> Pronouns.fromId(v) }
+                            pronounsCache.putAll(pronouns)
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        } finally {
+                            inProgressFetching.removeAll(it.toSet())
                         }
-
-                        val pronouns = Json.decodeFromString<Map<String, String>>(response.body())
-                            .mapKeys { (k, _) -> UUID.fromString(k) }
-                            .mapValues { (_, v) -> Pronouns.fromId(v) }
-                        pronounsCache.putAll(pronouns)
-
-                        inProgressFetching.removeAll(it.toSet())
                     }
                 }.awaitAll()
             }
