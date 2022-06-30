@@ -10,7 +10,7 @@ import net.minecraft.text.Text
 object PronounifyConfig : SettxiConfigKotlinx(FabricLoader.getInstance().configDir.resolve("pronounify.json")) {
     private const val visibility = "pronounify.config.category.visibility"
 
-    var showInChat by boolean(true) {
+    var showInChat by boolean(false) {
         name = "pronounify.config.showInChat.name"
         category = visibility
         description =  "pronounify.config.showInChat.description"
