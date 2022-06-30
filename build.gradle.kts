@@ -54,7 +54,19 @@ loom {
     clientOnlyMinecraftJar()
 }
 
+java {
+    withSourcesJar()
+}
+
 tasks {
+    remapJar {
+        archiveClassifier.set("fabric-$minecraftVersion")
+    }
+
+    remapSourcesJar {
+        archiveClassifier.set("fabric-$minecraftVersion-sources")
+    }
+
     processResources {
         val modId: String by project
         val modName: String by project
@@ -161,8 +173,8 @@ githubRelease {
 publishing {
     publications {
         create<MavenPublication>("mod") {
-            groupId = group.toString()
-            artifactId = base.archivesName.get()
+            groupId = "dev.isxander"
+            artifactId = "pronounify"
 
             from(components["java"])
         }
