@@ -7,6 +7,7 @@ import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -21,7 +22,7 @@ public class EntityRendererMixin<T extends Entity> {
             var messageManager = MessageManager.INSTANCE;
 
             if (pronounManager.isPronounCached(uuid)) {
-                return messageManager.getTooltipTextWithPronoun(text, pronounManager.getPronoun(uuid));
+                return messageManager.getTextWithColoredPronoun(text, pronounManager.getPronoun(uuid), Formatting.DARK_GRAY);
             } else if (!pronounManager.isCurrentlyFetching(uuid)) {
                 pronounManager.cachePronoun(uuid);
             }

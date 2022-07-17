@@ -9,6 +9,8 @@
   "client": [
     "ClientPlayNetworkHandlerMixin",
     "EntityRendererMixin",
-    "InGameHudMixin"
+    "InGameHudMixin",
+    "SocialInteractionsPlayerListEntryMixin",
+    "SocialInteractionsPlayerListWidgetMixin"
   ]
 }
