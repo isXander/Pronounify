@@ -14,7 +14,7 @@ import java.util.UUID;
 public class SocialInteractionsPlayerListWidgetMixin {
 
     @Inject(method = "update", at = @At("HEAD"))
-    private void onUsersUpdate(Collection<UUID> uuids, double scrollAmount, CallbackInfo ci) {
+    private void onUsersUpdate(Collection<UUID> uuids, double scrollAmount, boolean includeOffline, CallbackInfo ci) {
         PronounManager.INSTANCE.bulkCachePronouns(uuids);
     }
 }
