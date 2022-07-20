@@ -3,13 +3,11 @@
   "required": true,
   "minVersion": "0.8",
   "compatibilityLevel": "JAVA_17",
-  "mixins": [
-    "EntityContentMixin"
-  ],
   "client": [
+    "EntityContentMixin",
+    "MessageHandlerMixin",
     "ClientPlayNetworkHandlerMixin",
     "EntityRendererMixin",
-    "InGameHudMixin",
     "SocialInteractionsPlayerListEntryMixin",
     "SocialInteractionsPlayerListWidgetMixin"
   ]

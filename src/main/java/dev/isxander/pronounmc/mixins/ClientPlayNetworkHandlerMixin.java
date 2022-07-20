@@ -33,6 +33,6 @@ public class ClientPlayNetworkHandlerMixin {
 
         pronounify$waitingForChunkPacket = false;
 
-        MultithreadingKt.scheduleAsync(1000, () -> PronounManager.INSTANCE.bulkCachePronouns(client.getNetworkHandler().getPlayerUuids()));
+        //MultithreadingKt.scheduleAsync(1000, () -> PronounManager.INSTANCE.bulkCachePronouns(client.getNetworkHandler().getPlayerUuids()));
     }
 }
