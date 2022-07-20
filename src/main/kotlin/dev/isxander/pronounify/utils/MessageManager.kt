@@ -1,6 +1,5 @@
 package dev.isxander.pronounify.utils
 
-import dev.isxander.pronounify.utils.PronounManager.getPronoun
 import net.minecraft.client.MinecraftClient
 import net.minecraft.text.Text
 import net.minecraft.util.Formatting

@@ -16,13 +16,14 @@ plugins {
 }
 
 group = "dev.isxander"
-version = "2.0.0"
+version = "2.1.0"
 
 repositories {
     mavenCentral()
     maven("https://maven.isxander.dev/releases")
     maven("https://maven.shedaniel.me")
     maven("https://maven.terraformersmc.com/releases")
+    maven("https://jitpack.io")
 }
 
 val minecraftVersion: String by project
@@ -35,9 +36,7 @@ dependencies {
     mappings("net.fabricmc:yarn:$minecraftVersion+build.+:v2")
 
     modImplementation("net.fabricmc:fabric-loader:$fabricLoaderVersion")
-    modImplementation("net.fabricmc.fabric-api:fabric-api:0.56.3+1.19") {
-        exclude(module = "fabric-renderer-indigo")
-    }
+    modImplementation(fabricApi.module("fabric-resource-loader-v0", "0.57.3+1.19.1"))
     modImplementation("net.fabricmc:fabric-language-kotlin:1.8.1+kotlin.$kotlinVersion")
 
     include(implementation("dev.isxander.settxi:settxi-core:2.5.0")!!)
@@ -47,7 +46,7 @@ dependencies {
     })
 
     modImplementation("me.shedaniel.cloth:cloth-config-fabric:7.+")
-    modImplementation("com.terraformersmc:modmenu:4.0.0")
+    modImplementation("com.terraformersmc:modmenu:4.0.+")
 }
 
 loom {

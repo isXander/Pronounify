@@ -30,32 +30,26 @@ object PronounManager {
     fun getPronoun(uuid: UUID) = pronounsCache.getIfPresent(uuid)!!
 
     @JvmOverloads
-    fun cachePronoun(uuid: UUID, completion: (Pronouns) -> Unit = {}) {
+    fun cachePronoun(uuid: UUID, completion: ((Pronouns) -> Unit)? = null) {
         if (isPronounCached(uuid) || isCurrentlyFetching(uuid))
             return
 
-        listenToPronounGet(uuid, completion)
+        completion?.let { listenToPronounGet(uuid, it) }
 
         inProgressFetching += uuid
 
         runAsync {
             try {
-                val httpClient = HttpClient.newHttpClient()
-                val url = URI.create("https://pronoundb.org/api/v1/lookup?platform=minecraft&id=$uuid")
-                val request = HttpRequest.newBuilder(url).build()
-                val response = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
-
-                val pronouns = Json.decodeFromString<SingleLookupResponse>(response.body()).toEnum()!!
+                val pronouns = fetchPronoun(uuid)
                 pronounsCache.put(uuid, pronouns)
 
+                inProgressFetching -= uuid
                 pronounEvents[uuid]?.forEach {
                     it(pronouns)
                 }
                 pronounEvents.remove(uuid)
             } catch (e: Exception) {
                 e.printStackTrace()
-            } finally {
-                inProgressFetching -= uuid
             }
         }
     }
@@ -95,6 +89,15 @@ object PronounManager {
 
     fun listenToPronounGet(uuid: UUID, listener: (Pronouns) -> Unit) {
         pronounEvents.getOrPut(uuid) { mutableListOf() } += listener
+    }
+
+    private fun fetchPronoun(uuid: UUID): Pronouns {
+        val httpClient = HttpClient.newHttpClient()
+        val url = URI.create("https://pronoundb.org/api/v1/lookup?platform=minecraft&id=$uuid")
+        val request = HttpRequest.newBuilder(url).build()
+        val response = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
+
+        return Json.decodeFromString<SingleLookupResponse>(response.body()).toEnum()!!
     }
 
     @Serializable
