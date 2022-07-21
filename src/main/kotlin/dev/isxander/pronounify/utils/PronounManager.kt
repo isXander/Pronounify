@@ -87,7 +87,7 @@ object PronounManager {
         }}
     }
 
-    fun listenToPronounGet(uuid: UUID, listener: (Pronouns) -> Unit) {
+    private fun listenToPronounGet(uuid: UUID, listener: (Pronouns) -> Unit) {
         pronounEvents.getOrPut(uuid) { mutableListOf() } += listener
     }
 

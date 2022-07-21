@@ -9,6 +9,7 @@ import net.minecraft.text.Text
 
 object PronounifyConfig : SettxiConfigKotlinx(FabricLoader.getInstance().configDir.resolve("pronounify.json")) {
     private const val visibility = "pronounify.config.category.visibility"
+    private const val caching = "pronounify.config.category.caching"
 
     var showInChat by boolean(false) {
         name = "pronounify.config.showInChat.name"
@@ -32,6 +33,12 @@ object PronounifyConfig : SettxiConfigKotlinx(FabricLoader.getInstance().configD
         name = "pronounify.config.showInSocialScreen.name"
         category = visibility
         description =  "pronounify.config.showInSocialScreen.description"
+    }
+
+    var cacheOnWorldSwitch by boolean(true) {
+        name = "pronounify.config.cacheOnWorldSwitch.name"
+        category = caching
+        description = "pronounify.config.cacheOnWorldSwitch.description"
     }
 
 

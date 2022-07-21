@@ -1,5 +1,6 @@
 package dev.isxander.pronounmc.mixins;
 
+import dev.isxander.pronounify.config.PronounifyConfig;
 import dev.isxander.pronounify.utils.MultithreadingKt;
 import dev.isxander.pronounify.utils.PronounManager;
 import net.minecraft.client.MinecraftClient;
@@ -33,6 +34,8 @@ public class ClientPlayNetworkHandlerMixin {
 
         pronounify$waitingForChunkPacket = false;
 
-        //MultithreadingKt.scheduleAsync(1000, () -> PronounManager.INSTANCE.bulkCachePronouns(client.getNetworkHandler().getPlayerUuids()));
+        if (PronounifyConfig.INSTANCE.getCacheOnWorldSwitch()) {
+            MultithreadingKt.scheduleAsync(1000, () -> PronounManager.INSTANCE.bulkCachePronouns(client.getNetworkHandler().getPlayerUuids()));
+        }
     }
 }
