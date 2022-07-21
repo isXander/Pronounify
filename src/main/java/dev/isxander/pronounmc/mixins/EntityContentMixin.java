@@ -7,6 +7,7 @@ import kotlin.Unit;
 import net.minecraft.entity.EntityType;
 import net.minecraft.text.HoverEvent;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -40,7 +41,7 @@ public class EntityContentMixin {
             if (pronounManager.isPronounCached(uuid)) {
                 var pronouns = pronounManager.getPronoun(uuid);
 
-                name = MessageManager.INSTANCE.getTooltipTextWithPronoun(name, pronouns);
+                name = MessageManager.INSTANCE.getTextWithColoredPronoun(name, pronouns, Formatting.DARK_GRAY);
             } else if (!pronounManager.isCurrentlyFetching(uuid)) {
                 pronounManager.cachePronoun(uuid, (pronouns) -> {
                     tooltip = null;

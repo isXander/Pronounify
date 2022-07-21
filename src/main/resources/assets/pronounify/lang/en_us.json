@@ -27,5 +27,7 @@
   "pronounify.config.showOnNametag.name": "Show On Nametag",
   "pronounify.config.showOnNametag.description": "Adds the pronouns to players' nametags above their heads.",
   "pronounify.config.showInTooltip.name": "Show In Tooltip",
-  "pronounify.config.showInTooltip.description": "Adds the pronouns to the player's name when hovering over their name in the chat message with advanced tooltips enabled."
+  "pronounify.config.showInTooltip.description": "Adds the pronouns to the player's name when hovering over their name in the chat message with advanced tooltips enabled.",
+  "pronounify.config.showInSocialScreen.name": "Show In Social Screen",
+  "pronounify.config.showInSocialScreen.description": "Adds the pronouns next to the player's name in the social interaction screen."
 }

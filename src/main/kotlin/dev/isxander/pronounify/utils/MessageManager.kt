@@ -15,7 +15,7 @@ object MessageManager {
         return Text.empty().append(pronouns.getText().formatted(Formatting.DARK_GRAY)).append(" ").append(message)
     }
 
-    fun getTooltipTextWithPronoun(name: Text, pronouns: Pronouns): Text {
+    fun getTextWithColoredPronoun(name: Text, pronouns: Pronouns, color: Formatting): Text {
         if (pronouns == Pronouns.UNSPECIFIED)
             return name
 
@@ -25,7 +25,7 @@ object MessageManager {
                 append(" (")
                 append(pronouns.getText())
                 append(")")
-                formatted(Formatting.DARK_GRAY)
+                formatted(color)
             })
         }
     }

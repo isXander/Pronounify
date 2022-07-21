@@ -28,6 +28,13 @@ object PronounifyConfig : SettxiConfigKotlinx(FabricLoader.getInstance().configD
         description =  "pronounify.config.showInTooltip.description"
     }
 
+    var showInSocialScreen by boolean(true) {
+        name = "pronounify.config.showInSocialScreen.name"
+        category = visibility
+        description =  "pronounify.config.showInSocialScreen.description"
+    }
+
+
     init {
         import()
     }
